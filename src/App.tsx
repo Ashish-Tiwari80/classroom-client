@@ -19,6 +19,7 @@ import { BookOpen, GraduationCap, Home } from "lucide-react";
 import { Layout } from "./components/refine-ui/layout/layout";
 import SubjectsList from "./pages/subjects/list";
 import SubjectsCreate from "./pages/subjects/create";
+import SubjectsShow from "./pages/subjects/show";
 
 import ClassesList from "./pages/classes/list";
 import ClassesCreate from "./pages/classes/create";
@@ -51,6 +52,7 @@ function App() {
                 {
                   name: "subjects",
                   list: "/subjects",
+                  show: "/subjects/show/:id",
                   create: "/subjects/create",
                   meta: { label: "Subjects", icon: <BookOpen /> },
                 },
@@ -60,7 +62,7 @@ function App() {
                   show: "/classes/show/:id",
                   create: "/classes/create",
                   meta: { label: "Classes", icon: <GraduationCap /> },
-                }
+                },
               ]}
             >
               <Routes>
@@ -85,10 +87,13 @@ function App() {
                   }
                 >
                   <Route path="/" element={<Dashboard />} />
+                  
                   <Route path="/subjects">
                     <Route index element={<SubjectsList />} />
                     <Route path="create" element={<SubjectsCreate />} />
+                    <Route path="show/:id" element={<SubjectsShow />} />
                   </Route>
+
                   <Route path="/classes">
                     <Route index element={<ClassesList />} />
                     <Route path="create" element={<ClassesCreate />} />
@@ -96,6 +101,7 @@ function App() {
                   </Route>
                 </Route>
               </Routes>
+
               <Toaster />
               <RefineKbar />
               <UnsavedChangesNotifier />
