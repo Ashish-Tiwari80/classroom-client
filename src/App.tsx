@@ -15,7 +15,7 @@ import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 import { dataProvider } from "./providers/data";
 import { authProvider } from "./providers/auth";
 import Dashboard from "./pages/dashboard";
-import { BookOpen, Building2, GraduationCap, Home } from "lucide-react";
+import { BookOpen, Building2, GraduationCap, Home, Users } from "lucide-react";
 import { Layout } from "./components/refine-ui/layout/layout";
 import SubjectsList from "./pages/subjects/list";
 import SubjectsCreate from "./pages/subjects/create";
@@ -29,6 +29,8 @@ import { Register } from "./pages/register";
 import DepartmentsCreate from "./pages/departments/create";
 import DepartmentsList from "./pages/departments/list";
 import DepartmentShow from "./pages/departments/show";
+import FacultyList from "./pages/faculty/list";
+import FacultyShow from "./pages/faculty/show";
 
 function App() {
   return (
@@ -65,6 +67,15 @@ function App() {
                   show: "/departments/show/:id",
                   create: "/departments/create",
                   meta: { label: "Departments", icon: <Building2 /> },
+                },
+                {
+                  name: "users",
+                  list: "/faculty",
+                  show: "/faculty/show/:id",
+                  meta: {
+                    label: "Faculty",
+                    icon: <Users />,
+                  },
                 },
                 {
                   name: "classes",
@@ -108,6 +119,11 @@ function App() {
                     <Route index element={<DepartmentsList />} />
                     <Route path="create" element={<DepartmentsCreate />} />
                     <Route path="show/:id" element={<DepartmentShow />} />
+                  </Route>
+
+                  <Route path="faculty">
+                    <Route index element={<FacultyList />} />
+                    <Route path="show/:id" element={<FacultyShow />} />
                   </Route>
 
                   <Route path="/classes">
