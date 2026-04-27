@@ -260,12 +260,12 @@ const SubjectsShow = () => {
       <Card className="hover:shadow-md transition-shadow">
         <CardHeader className="flex w-full flex-row items-center justify-between">
           <CardTitle>Subject Overview</CardTitle>
-          <Badge variant="secondary">{details?.subject.code}</Badge>
+          <Badge>{details.subject.code}</Badge>
         </CardHeader>
 
         <CardContent className="space-y-3">
           <p className="text-sm text-muted-foreground">
-            {details?.subject.description ?? "No description provided."}
+            {details.subject.description ?? "No description provided."}
           </p>
         </CardContent>
       </Card>
@@ -275,7 +275,7 @@ const SubjectsShow = () => {
           <CardTitle>Department</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
-          {details?.subject.department ? (
+          {details.subject.department ? (
             <>
               <Link
                 to={`/departments/show/${details.subject.department.id}`}
@@ -299,7 +299,7 @@ const SubjectsShow = () => {
       <Card className="hover:shadow-md transition-shadow">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Classes</CardTitle>
-          <Badge variant="secondary">{details?.totals.classes}</Badge>
+          <Badge variant="secondary">{details.totals.classes}</Badge>
         </CardHeader>
         <CardContent>
           <DataTable table={classesTable} paginationVariant="simple" />
