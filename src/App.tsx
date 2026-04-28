@@ -83,7 +83,7 @@ function App() {
                 {
                   name: "enrollments",
                   list: "/enrollments",
-                  create: "/enrollments/create",
+                  create: "/enrollments/join",
                   meta: {
                     label: "Enrollments",
                     icon: <ClipboardCheck />,

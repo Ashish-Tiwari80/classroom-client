@@ -41,7 +41,6 @@ const EnrollmentsList = () => {
   const [enrolledIds, setEnrolledIds] = useState<Set<number>>(new Set());
   const navigate = useNavigate();
   const apiUrl = useApiUrl();
-  console.log("apiUrl:", apiUrl); // add this line
 
   const { query: classesQuery } = useList<ClassItem>({
     resource: "classes",
