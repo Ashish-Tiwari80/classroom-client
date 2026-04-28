@@ -34,8 +34,9 @@ const options: CreateDataProviderOptions = {
         const field = "field" in filter ? filter.field : "";
         const value = String(filter.value);
 
+        if (field === "role") params.role = value;
+
         if (resource === "users") {
-          if (field === "role") params.role = value;
           if (field == "search" || field === "name" || field === "email")
             params.search = value;
         }
@@ -50,7 +51,7 @@ const options: CreateDataProviderOptions = {
         }
 
         if (resource === "classes") {
-          if (field === "name") params.search = value;
+          if (field == "search" || field === "name") params.search = value;
           if (field === "subject") params.subject = value;
           if (field === "teacher") params.teacher = value;
         }

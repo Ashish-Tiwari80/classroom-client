@@ -15,7 +15,7 @@ import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 import { dataProvider } from "./providers/data";
 import { authProvider } from "./providers/auth";
 import Dashboard from "./pages/dashboard";
-import { BookOpen, Building2, GraduationCap, Home, Users } from "lucide-react";
+import { BookOpen, Building2, ClipboardCheck, GraduationCap, Home, Users } from "lucide-react";
 import { Layout } from "./components/refine-ui/layout/layout";
 import SubjectsList from "./pages/subjects/list";
 import SubjectsCreate from "./pages/subjects/create";
@@ -31,6 +31,9 @@ import DepartmentsList from "./pages/departments/list";
 import DepartmentShow from "./pages/departments/show";
 import FacultyList from "./pages/faculty/list";
 import FacultyShow from "./pages/faculty/show";
+import EnrollmentsJoin from "./pages/enrollments/join";
+import EnrollmentConfirm from "./pages/enrollments/confirm";
+import EnrollmentsList from "./pages/enrollments/list";
 
 function App() {
   return (
@@ -78,6 +81,15 @@ function App() {
                   },
                 },
                 {
+                  name: "enrollments",
+                  list: "/enrollments",
+                  create: "/enrollments/create",
+                  meta: {
+                    label: "Enrollments",
+                    icon: <ClipboardCheck />,
+                  },
+                },
+                {
                   name: "classes",
                   list: "/classes",
                   show: "/classes/show/:id",
@@ -87,7 +99,7 @@ function App() {
               ]}
             >
               <Routes>
-                <Route
+                {/* <Route
                   element={
                     <Authenticated key="public-routes" fallback={<Outlet />}>
                       <NavigateToResource fallbackTo="/" />
@@ -96,7 +108,7 @@ function App() {
                 >
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
-                </Route>
+                </Route> */}
 
                 <Route
                   element={
@@ -124,6 +136,12 @@ function App() {
                   <Route path="faculty">
                     <Route index element={<FacultyList />} />
                     <Route path="show/:id" element={<FacultyShow />} />
+                  </Route>
+
+                  <Route path="enrollments">
+                    <Route index element={<EnrollmentsList />} />
+                    <Route path="join" element={<EnrollmentsJoin />} />
+                    <Route path="confirm" element={<EnrollmentConfirm />} />
                   </Route>
 
                   <Route path="/classes">
