@@ -14,14 +14,14 @@ import { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
 import { useParams } from "react-router";
 
-type FacultyDepartment = {
+type UserDepartment = {
   id: number;
   name: string;
   code?: string | null;
   description?: string | null;
 };
 
-type FacultySubject = {
+type UserSubject = {
   id: number;
   name: string;
   code?: string | null;
@@ -33,7 +33,7 @@ type FacultySubject = {
   } | null;
 };
 
-const FacultyShow = () => {
+const UsersShow = () => {
   const { id } = useParams();
   const userId = id || "";
 
@@ -43,7 +43,7 @@ const FacultyShow = () => {
 
   const user = query.data?.data;
 
-  const departmentColumns = useMemo<ColumnDef<FacultyDepartment>[]>(
+  const departmentColumns = useMemo<ColumnDef<UserDepartment>[]>(
     () => [
       {
         id: "code",
@@ -102,7 +102,7 @@ const FacultyShow = () => {
     [],
   );
 
-  const subjectColumns = useMemo<ColumnDef<FacultySubject>[]>(
+  const subjectColumns = useMemo<ColumnDef<UserSubject>[]>(
     () => [
       {
         id: "code",
@@ -164,7 +164,7 @@ const FacultyShow = () => {
     [],
   );
 
-  const departmentsTable = useTable<FacultyDepartment>({
+  const departmentsTable = useTable<UserDepartment>({
     columns: departmentColumns,
     refineCoreProps: {
       resource: `users/${userId}/departments`,
@@ -175,7 +175,7 @@ const FacultyShow = () => {
     },
   });
 
-  const subjectsTable = useTable<FacultySubject>({
+  const subjectsTable = useTable<UserSubject>({
     columns: subjectColumns,
     refineCoreProps: {
       resource: `users/${userId}/subjects`,
@@ -233,7 +233,7 @@ const FacultyShow = () => {
             <p className="text-sm text-muted-foreground">
               Departments tied to {user.name} based on classes and enrollments.
             </p>
-            <DataTable table={departmentsTable} paginationVariant="simple" />
+            <DataTable table={departmentsTable} />
           </CardContent>
         </Card>
 
@@ -245,7 +245,7 @@ const FacultyShow = () => {
             <p className="text-sm text-muted-foreground">
               Subjects associated with {user.name} in this term.
             </p>
-            <DataTable table={subjectsTable} paginationVariant="simple" />
+            <DataTable table={subjectsTable} />
           </CardContent>
         </Card>
       </div>
@@ -262,4 +262,4 @@ const getInitials = (name = "") => {
   }`.toUpperCase();
 };
 
-export default FacultyShow;
+export default UsersShow;

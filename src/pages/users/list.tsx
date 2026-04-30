@@ -5,6 +5,14 @@ import { ListView } from "@/components/refine-ui/views/list-view";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import {
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Select } from "@/components/ui/select";
+import { ROLE_OPTIONS } from "@/constants";
 import { User } from "@/types";
 import { useTable } from "@refinedev/react-table";
 import { ColumnDef } from "@tanstack/react-table";
@@ -12,13 +20,34 @@ import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 
-const FacultyList = () => {
+const UsersList = () => {
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(
     searchParams.get("search") || "",
   );
+  const [selectedRole, setSelectedRole] = useState("all");
 
-  const facultyColumns = useMemo<ColumnDef<User>[]>(
+  const roleFilters =
+    selectedRole === "all"
+      ? []
+      : [
+          {
+            field: "role",
+            operator: "eq" as const,
+            value: selectedRole,
+          },
+        ];
+  const searchFilters = searchQuery
+    ? [
+        {
+          field: "search",
+          operator: "contains" as const,
+          value: searchQuery,
+        },
+      ]
+    : [];
+
+  const UserColumns = useMemo<ColumnDef<User>[]>(
     () => [
       {
         id: "name",
@@ -74,18 +103,8 @@ const FacultyList = () => {
     [],
   );
 
-  const searchFilters = searchQuery
-    ? [
-        {
-          field: "search",
-          operator: "contains" as const,
-          value: searchQuery,
-        },
-      ]
-    : [];
-
-  const facultyTable = useTable<User>({
-    columns: facultyColumns,
+  const UserTable = useTable<User>({
+    columns: UserColumns,
     refineCoreProps: {
       resource: "users",
       pagination: {
@@ -93,14 +112,7 @@ const FacultyList = () => {
         mode: "server",
       },
       filters: {
-        permanent: [
-          {
-            field: "role",
-            operator: "eq" as const,
-            value: "teacher",
-          },
-          ...searchFilters,
-        ],
+        permanent: [...searchFilters, ...roleFilters],
       },
       sorters: {
         initial: [
@@ -116,10 +128,10 @@ const FacultyList = () => {
   return (
     <ListView>
       <Breadcrumb />
-      <h1 className="page-title">Faculty</h1>
+      <h1 className="page-title">Users</h1>
 
       <div className="intro-row">
-        <p>Browse and manage faculty members.</p>
+        <p>Browse and manage users.</p>
 
         <div className="actions-row">
           <div className="search-field">
@@ -132,10 +144,27 @@ const FacultyList = () => {
               onChange={(event) => setSearchQuery(event.target.value)}
             />
           </div>
+
+          <div className="flex gap-2 w-full sm:w-auto">
+            <Select value={selectedRole} onValueChange={setSelectedRole}>
+              <SelectTrigger>
+                <SelectValue placeholder="Filter by role..." />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectItem value="all">All Roles</SelectItem>
+                {ROLE_OPTIONS.map((role) => (
+                  <SelectItem key={role.value} value={role.value}>
+                    {role.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 
-      <DataTable table={facultyTable} />
+      <DataTable table={UserTable} />
     </ListView>
   );
 };
@@ -149,4 +178,4 @@ const getInitials = (name = "") => {
   }`.toUpperCase();
 };
 
-export default FacultyList;
+export default UsersList;

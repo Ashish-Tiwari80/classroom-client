@@ -29,11 +29,11 @@ import { Register } from "./pages/register";
 import DepartmentsCreate from "./pages/departments/create";
 import DepartmentsList from "./pages/departments/list";
 import DepartmentShow from "./pages/departments/show";
-import FacultyList from "./pages/faculty/list";
-import FacultyShow from "./pages/faculty/show";
 import EnrollmentsJoin from "./pages/enrollments/join";
 import EnrollmentConfirm from "./pages/enrollments/confirm";
 import EnrollmentsList from "./pages/enrollments/list";
+import UsersList from "./pages/users/list";
+import UsersShow from "./pages/users/show";
 
 function App() {
   return (
@@ -73,10 +73,10 @@ function App() {
                 },
                 {
                   name: "users",
-                  list: "/faculty",
-                  show: "/faculty/show/:id",
+                  list: "/users",
+                  show: "/users/show/:id",
                   meta: {
-                    label: "Faculty",
+                    label: "Users",
                     icon: <Users />,
                   },
                 },
@@ -99,7 +99,7 @@ function App() {
               ]}
             >
               <Routes>
-                {/* <Route
+                <Route
                   element={
                     <Authenticated key="public-routes" fallback={<Outlet />}>
                       <NavigateToResource fallbackTo="/" />
@@ -108,7 +108,7 @@ function App() {
                 >
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
-                </Route> */}
+                </Route>
 
                 <Route
                   element={
@@ -121,21 +121,21 @@ function App() {
                 >
                   <Route path="/" element={<Dashboard />} />
                   
-                  <Route path="/subjects">
+                  <Route path="subjects">
                     <Route index element={<SubjectsList />} />
                     <Route path="create" element={<SubjectsCreate />} />
                     <Route path="show/:id" element={<SubjectsShow />} />
                   </Route>
 
-                  <Route path="/departments">
+                  <Route path="departments">
                     <Route index element={<DepartmentsList />} />
                     <Route path="create" element={<DepartmentsCreate />} />
                     <Route path="show/:id" element={<DepartmentShow />} />
                   </Route>
 
-                  <Route path="faculty">
-                    <Route index element={<FacultyList />} />
-                    <Route path="show/:id" element={<FacultyShow />} />
+                  <Route path="users">
+                    <Route index element={<UsersList />} />
+                    <Route path="show/:id" element={<UsersShow />} />
                   </Route>
 
                   <Route path="enrollments">
@@ -144,7 +144,7 @@ function App() {
                     <Route path="confirm" element={<EnrollmentConfirm />} />
                   </Route>
 
-                  <Route path="/classes">
+                  <Route path="classes">
                     <Route index element={<ClassesList />} />
                     <Route path="create" element={<ClassesCreate />} />
                     <Route path="show/:id" element={<ClassesShow />} />
