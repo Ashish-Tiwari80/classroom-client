@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { useLink, useLogin, useRefineOptions } from "@refinedev/core";
+import { useLink, useLogin } from "@refinedev/core";
 
 export const SignInForm = () => {
   const [rememberMe, setRememberMe] = useState(false);
@@ -27,8 +27,6 @@ export const SignInForm = () => {
   const [password, setPassword] = useState("");
 
   const Link = useLink();
-
-  const { title } = useRefineOptions();
 
   const { mutate: login } = useLogin();
 
