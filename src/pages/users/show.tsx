@@ -189,13 +189,13 @@ const UsersShow = () => {
   if (query.isLoading || query.isError || !user) {
     return (
       <ShowView className="class-view">
-        <ShowViewHeader resource="users" title="Faculty Details" />
+        <ShowViewHeader resource="users" title="User Details" />
         <p className="text-sm text-muted-foreground">
           {query.isLoading
-            ? "Loading faculty details..."
+            ? "Loading user details..."
             : query.isError
-            ? "Failed to load faculty details."
-            : "Faculty details not found."}
+            ? "Failed to load user details."
+            : "User details not found."}
         </p>
       </ShowView>
     );
