@@ -15,7 +15,14 @@ import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 import { dataProvider } from "./providers/data";
 import { authProvider } from "./providers/auth";
 import Dashboard from "./pages/dashboard";
-import { BookOpen, Building2, ClipboardCheck, GraduationCap, Home, Users } from "lucide-react";
+import {
+  BookOpen,
+  Building2,
+  ClipboardCheck,
+  GraduationCap,
+  Home,
+  Users,
+} from "lucide-react";
 import { Layout } from "./components/refine-ui/layout/layout";
 import SubjectsList from "./pages/subjects/list";
 import SubjectsCreate from "./pages/subjects/create";
@@ -50,6 +57,17 @@ function App() {
                 syncWithLocation: true,
                 warnWhenUnsavedChanges: true,
                 projectId: "zwWqdz-qktbFB-wopcZs",
+                title: {
+                  text: "Classroom Hub",
+                  icon: (
+                    <img
+                      src="/classroom-hub.ico"
+                      width={28}
+                      height={28}
+                      alt="logo"
+                    />
+                  ),
+                },
               }}
               resources={[
                 {
@@ -120,7 +138,7 @@ function App() {
                   }
                 >
                   <Route path="/" element={<Dashboard />} />
-                  
+
                   <Route path="subjects">
                     <Route index element={<SubjectsList />} />
                     <Route path="create" element={<SubjectsCreate />} />
@@ -155,7 +173,13 @@ function App() {
               <Toaster />
               <RefineKbar />
               <UnsavedChangesNotifier />
-              <DocumentTitleHandler />
+              <DocumentTitleHandler
+                handler={({ resource }) => {
+                  const resourceName =
+                    resource?.meta?.label ?? resource?.name ?? "";
+                  return `${resourceName} | Classroom Hub`;
+                }}
+              />
             </Refine>
             <DevtoolsPanel />
           </DevtoolsProvider>
