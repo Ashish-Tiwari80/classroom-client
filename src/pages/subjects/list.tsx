@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { DEPARTMENT_OPTIONS } from "@/constants";
 import { Subject } from "@/types";
+import { useGetIdentity } from "@refinedev/core";
 import { useTable } from "@refinedev/react-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Search } from "lucide-react";
@@ -22,6 +23,7 @@ import { useMemo, useState } from "react";
 const SubjectsList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("all");
+  const { data: user } = useGetIdentity();
 
   const departmentFilters =
     selectedDepartment === "all"
@@ -146,7 +148,7 @@ const SubjectsList = () => {
               </SelectContent>
             </Select>
 
-            <CreateButton />
+            {user?.role === 'admin' && <CreateButton />}
           </div>
         </div>
       </div>

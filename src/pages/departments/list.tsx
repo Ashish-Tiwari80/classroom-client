@@ -6,6 +6,7 @@ import { ListView } from "@/components/refine-ui/views/list-view";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useTable } from "@refinedev/react-table";
+import { useGetIdentity } from "@refinedev/core";
 import { ColumnDef } from "@tanstack/react-table";
 import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -20,6 +21,7 @@ type DepartmentListItem = {
 
 const DepartmentsList = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const { data: user } = useGetIdentity();
 
   const departmentColumns = useMemo<ColumnDef<DepartmentListItem>[]>(
     () => [
@@ -147,7 +149,7 @@ const DepartmentsList = () => {
               onChange={(event) => setSearchQuery(event.target.value)}
             />
           </div>
-          <CreateButton resource="departments" />
+          {user?.role === 'admin' && <CreateButton resource="departments" />}
         </div>
       </div>
 
