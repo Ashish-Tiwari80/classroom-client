@@ -405,7 +405,7 @@ const SubjectsShow = () => {
     );
   }
 
-  const totalAttempts = (quizAttemptsTable.refineCore.tableQuery?.data as any)?.total ?? 0;
+  const totalAttempts = (quizAttemptsTable.refineCore.tableQuery?.data)?.total ?? 0;
 
   return (
     <ShowView className="class-view space-6">

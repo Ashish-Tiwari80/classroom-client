@@ -40,9 +40,7 @@ const QuizzesCreateSchema = z.object({
       invalid_type_error: "Subject is required",
     })
     .min(1, "Subject is required"),
-  topic: z
-    .string()
-    .min(3, "Topic must be at least 3 characters"),
+  topic: z.string().min(3, "Topic must be at least 3 characters"),
   numQuestions: z.coerce
     .number({
       required_error: "Number of questions is required",
@@ -105,7 +103,10 @@ const QuizzesCreate = () => {
 
       <h1 className="page-title">Create a Quiz</h1>
       <div className="intro-row">
-        <p>Provide the required information below to generate a quiz using Gemini AI.</p>
+        <p>
+          Provide the required information below to generate a quiz using Gemini
+          AI.
+        </p>
         <Button onClick={() => back()}>Go Back</Button>
       </div>
 
@@ -167,7 +168,10 @@ const QuizzesCreate = () => {
                         Topic <span className="text-orange-600">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g. Quadratic Equations, World War II..." {...field} />
+                        <Input
+                          placeholder="e.g. Quadratic Equations, World War II..."
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -180,7 +184,8 @@ const QuizzesCreate = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Number of Questions <span className="text-orange-600">*</span>
+                        Number of Questions{" "}
+                        <span className="text-orange-600">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -228,7 +233,12 @@ const QuizzesCreate = () => {
 
                 <Separator />
 
-                <Button type="submit" size="lg" className="w-full">
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full"
+                  disabled={isSubmitting || subjectsLoading}
+                >
                   {isSubmitting ? (
                     <div className="flex gap-1">
                       <span>Generating Quiz...</span>

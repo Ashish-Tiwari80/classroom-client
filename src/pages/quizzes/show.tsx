@@ -331,8 +331,11 @@ const QuizzesShow = () => {
                   }
 
                   return (
-                    <div
+                    <button
+                      type="button"
                       key={oIndex}
+                      disabled={showResults}
+                      aria-pressed={isSelected}
                       className={optionClass}
                       onClick={() => handleSelect(qIndex, option)}
                     >
@@ -340,14 +343,14 @@ const QuizzesShow = () => {
                         {String.fromCharCode(65 + oIndex)}.
                       </span>
                       <span>{option}</span>
-                    </div>
+                    </button>
                   );
                 })}
 
                 {/* Per-question AI feedback */}
-                {showResults && analysis?.questionFeedback?.[qIndex] && (
+                {showResults && displayAnalysis?.questionFeedback?.[qIndex] && (
                   <p className="text-xs text-muted-foreground mt-2 px-1 italic">
-                    💡 {analysis.questionFeedback[qIndex]}
+                    💡 {displayAnalysis.questionFeedback[qIndex]}
                   </p>
                 )}
 
