@@ -12,9 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DEPARTMENT_OPTIONS } from "@/constants";
-import { Subject } from "@/types";
-import { useGetIdentity } from "@refinedev/core";
+import { Subject, Department } from "@/types";
+import { useGetIdentity, useList } from "@refinedev/core";
 import { useTable } from "@refinedev/react-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Search } from "lucide-react";
@@ -24,6 +23,13 @@ const SubjectsList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("all");
   const { data: user } = useGetIdentity();
+
+  const { query: departmentsQuery } = useList<Department>({
+      resource: "departments",
+      pagination: { pageSize: 100 },
+    });
+
+  const departments = departmentsQuery.data?.data || [];
 
   const departmentFilters =
     selectedDepartment === "all"
@@ -140,9 +146,9 @@ const SubjectsList = () => {
 
               <SelectContent>
                 <SelectItem value="all">All Departments</SelectItem>
-                {DEPARTMENT_OPTIONS.map((department) => (
-                  <SelectItem key={department.value} value={department.value}>
-                    {department.label}
+                {departments.map((department) => (
+                  <SelectItem key={department.id} value={department.name}>
+                    {department.name}
                   </SelectItem>
                 ))}
               </SelectContent>

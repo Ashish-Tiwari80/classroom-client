@@ -19,6 +19,7 @@ import {
   BookOpen,
   Building2,
   ClipboardCheck,
+  ClipboardList,
   GraduationCap,
   Home,
   Users,
@@ -41,6 +42,9 @@ import EnrollmentConfirm from "./pages/enrollments/confirm";
 import EnrollmentsList from "./pages/enrollments/list";
 import UsersList from "./pages/users/list";
 import UsersShow from "./pages/users/show";
+import QuizzesList from "./pages/quizzes/list";
+import QuizzesCreate from "./pages/quizzes/create";
+import QuizzesShow from "./pages/quizzes/show";
 
 function App() {
   return (
@@ -114,6 +118,13 @@ function App() {
                   create: "/classes/create",
                   meta: { label: "Classes", icon: <GraduationCap /> },
                 },
+                {
+                  name: "quizzes",
+                  list: "/quizzes",
+                  show: "/quizzes/show/:id",
+                  create: "/quizzes/create",
+                  meta: { label: "Quizzes", icon: <ClipboardList /> },
+                },
               ]}
             >
               <Routes>
@@ -166,6 +177,12 @@ function App() {
                     <Route index element={<ClassesList />} />
                     <Route path="create" element={<ClassesCreate />} />
                     <Route path="show/:id" element={<ClassesShow />} />
+                  </Route>
+
+                  <Route path="quizzes">
+                    <Route index element={<QuizzesList />} />
+                    <Route path="create" element={<QuizzesCreate />} />
+                    <Route path="show/:id" element={<QuizzesShow />} />
                   </Route>
                 </Route>
               </Routes>

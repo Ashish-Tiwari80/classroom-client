@@ -6,13 +6,15 @@ import {
 } from "@/components/refine-ui/views/show-view";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Department, Subject } from "@/types";
-import { useLink, useShow } from "@refinedev/core";
+import { useGetIdentity, useLink, useShow } from "@refinedev/core";
 import { useTable } from "@refinedev/react-table";
 import { ColumnDef } from "@tanstack/react-table";
+import { BarChart2 } from "lucide-react";
 import { useMemo } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 type SubjectDetails = {
   subject: Subject & {
@@ -20,6 +22,7 @@ type SubjectDetails = {
   };
   totals: {
     classes: number;
+    quizzes: number;
   };
 };
 
@@ -44,6 +47,20 @@ type SubjectUser = {
   image?: string | null;
 };
 
+type QuizAttemptRow = {
+  id: number;
+  quizId: number;
+  userId: string;
+  score: number;
+  correctCount: number;
+  totalQuestions: number;
+  createdAt: string;
+  analysis?: { scoreLabel?: string } | null;
+  // joined fields from backend
+  quiz?: { topic: string; difficulty: string } | null;
+  user?: { name: string; email: string; image?: string | null } | null;
+};
+
 const getInitials = (name = "") => {
   const parts = name.trim().split(" ").filter(Boolean);
   if (parts.length === 0) return "";
@@ -53,13 +70,25 @@ const getInitials = (name = "") => {
   }`.toUpperCase();
 };
 
+const scoreBadgeVariant = (
+  score: number,
+): "default" | "secondary" | "destructive" | "outline" => {
+  if (score >= 75) return "default";
+  if (score >= 50) return "secondary";
+  return "destructive";
+};
+
 const SubjectsShow = () => {
   const Link = useLink();
+  const navigate = useNavigate();
   const { id } = useParams();
   const subjectId = id ?? "";
 
-  const { query } = useShow<SubjectDetails>({ resource: "subjects" });
+  const { data: identity } = useGetIdentity<{ id: string; role: string }>();
+  const isTeacherOrAdmin =
+    identity?.role === "admin" || identity?.role === "teacher";
 
+  const { query } = useShow<SubjectDetails>({ resource: "subjects" });
   const details = query.data?.data;
 
   const classColumns = useMemo<ColumnDef<SubjectClass>[]>(
@@ -135,6 +164,120 @@ const SubjectsShow = () => {
     [],
   );
 
+  const quizAttemptColumns = useMemo<ColumnDef<QuizAttemptRow>[]>(
+    () => [
+      {
+        id: "student",
+        size: 220,
+        header: () => <p className="column-title">Student</p>,
+        cell: ({ row }) => {
+          const u = row.original.user;
+          if (!u) {
+            return (
+              <span className="font-mono text-xs text-muted-foreground">
+                {row.original.userId}
+              </span>
+            );
+          }
+          return (
+            <div className="flex items-center gap-2">
+              <Avatar className="size-7">
+                {u.image && <AvatarImage src={u.image} alt={u.name} />}
+                <AvatarFallback>{getInitials(u.name)}</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col truncate">
+                <span className="truncate">{u.name}</span>
+                <span className="text-xs text-muted-foreground truncate">
+                  {u.email}
+                </span>
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        id: "quiz",
+        accessorKey: "quiz.topic",
+        size: 200,
+        header: () => <p className="column-title">Quiz</p>,
+        cell: ({ row }) => {
+          const quiz = row.original.quiz;
+          if (!quiz) return <span className="text-muted-foreground">—</span>;
+          return (
+            <div className="flex flex-col gap-0.5">
+              <span className="truncate text-foreground">{quiz.topic}</span>
+              <Badge variant="outline" className="w-fit text-xs">
+                {quiz.difficulty}
+              </Badge>
+            </div>
+          );
+        },
+      },
+      {
+        id: "score",
+        accessorKey: "score",
+        size: 100,
+        header: () => <p className="column-title">Score</p>,
+        cell: ({ row }) => (
+          <Badge variant={scoreBadgeVariant(row.original.score)}>
+            {row.original.score}%
+          </Badge>
+        ),
+      },
+      {
+        id: "correct",
+        size: 110,
+        header: () => <p className="column-title">Correct</p>,
+        cell: ({ row }) => (
+          <span className="text-sm text-muted-foreground">
+            {row.original.correctCount} / {row.original.totalQuestions}
+          </span>
+        ),
+      },
+      {
+        id: "label",
+        size: 150,
+        header: () => <p className="column-title">AI Label</p>,
+        cell: ({ row }) => {
+          const label = row.original.analysis?.scoreLabel;
+          if (!label) return <span className="text-muted-foreground">—</span>;
+          return <Badge variant="secondary">{label}</Badge>;
+        },
+      },
+      {
+        id: "date",
+        accessorKey: "createdAt",
+        size: 130,
+        header: () => <p className="column-title">Date</p>,
+        cell: ({ getValue }) => (
+          <span className="text-sm text-muted-foreground">
+            {new Date(getValue<string>()).toLocaleDateString()}
+          </span>
+        ),
+      },
+      {
+        id: "details",
+        size: 130,
+        header: () => <p className="column-title">Details</p>,
+        cell: ({ row }) => (
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1"
+            onClick={() =>
+              navigate(`/quizzes/show/${row.original.quizId}`)
+            }
+          >
+            <BarChart2 className="w-3.5 h-3.5" />
+            View
+          </Button>
+        ),
+      },
+    ],
+    [navigate],
+  );
+
+
   const userColumns = useMemo<ColumnDef<SubjectUser>[]>(
     () => [
       {
@@ -198,6 +341,15 @@ const SubjectsShow = () => {
     },
   });
 
+  const quizAttemptsTable = useTable<QuizAttemptRow>({
+    columns: quizAttemptColumns,
+    refineCoreProps: {
+      resource: `subjects/${subjectId}/quiz-attempts`,
+      pagination: { pageSize: 10, mode: "server" },
+      queryOptions: { enabled: isTeacherOrAdmin && !!subjectId },
+    },
+  });
+
   const teachersTable = useTable<SubjectUser>({
     columns: userColumns,
     refineCoreProps: {
@@ -253,6 +405,8 @@ const SubjectsShow = () => {
     );
   }
 
+  const totalAttempts = (quizAttemptsTable.refineCore.tableQuery?.data as any)?.total ?? 0;
+
   return (
     <ShowView className="class-view space-6">
       <ShowViewHeader resource="subjects" title={details?.subject.name} />
@@ -305,6 +459,29 @@ const SubjectsShow = () => {
           <DataTable table={classesTable} paginationVariant="simple" />
         </CardContent>
       </Card>
+
+      {isTeacherOrAdmin && (
+        <Card className="hover:shadow-md transition-shadow">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Quiz Attempts</CardTitle>
+            <div className="flex items-center gap-2">
+              {details.totals.quizzes > 0 && (
+                <Badge variant="outline">
+                  {details.totals.quizzes}{" "}
+                  {details.totals.quizzes === 1 ? "Quiz" : "Quizzes"}
+                </Badge>
+              )}
+              <Badge variant="secondary">
+                {totalAttempts}{" "}
+                {totalAttempts === 1 ? "Attempt" : "Attempts"}
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <DataTable table={quizAttemptsTable} paginationVariant="simple" />
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="hover:shadow-md transition-shadow">

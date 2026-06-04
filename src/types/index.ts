@@ -120,3 +120,20 @@ export type SignUpPayload = {
   imageCldPubId?: string;
   role: UserRole;
 };
+
+export type QuizQuestion = {
+  id: number;
+  question: string;
+  options: string[];
+  correctAnswer: string;
+};
+
+export type Quiz = {
+  id: number;
+  topic: string;
+  numQuestions: number;
+  difficulty: string;
+  createdAt: string;
+  subject: { name: string };
+  questions?: QuizQuestion[];
+};
