@@ -55,6 +55,13 @@ const options: CreateDataProviderOptions = {
           if (field === "subject") params.subject = value;
           if (field === "teacher") params.teacher = value;
         }
+
+        if (resource === "quizzes") {
+          if (field === "search" || field === "topic") params.search = value;
+          if (field === "difficulty") params.difficulty = value;
+          if (field === "subjectId") params.subjectId = value;
+          if (field === "userId") params.userId = value;
+        }
       });
 
       return params;
@@ -64,7 +71,6 @@ const options: CreateDataProviderOptions = {
       if (!response.ok) throw await buildHttpError(response);
 
       const payload: ListResponse = await response.clone().json();
-
       return payload.data ?? [];
     },
 
@@ -72,7 +78,6 @@ const options: CreateDataProviderOptions = {
       if (!response.ok) throw await buildHttpError(response);
 
       const payload: ListResponse = await response.clone().json();
-
       return payload.pagination?.total ?? payload.data?.length ?? 0;
     },
   },
@@ -83,9 +88,10 @@ const options: CreateDataProviderOptions = {
     buildBodyParams: async ({ variables }) => variables,
 
     mapResponse: async (response) => {
-      const json: CreateResponse = await response.json();
+      if (!response.ok) throw await buildHttpError(response);
 
-      return json.data ?? [];
+      const json: CreateResponse = await response.json();
+      return json.data ?? json ?? {};
     },
   },
 
@@ -96,11 +102,13 @@ const options: CreateDataProviderOptions = {
       if (!response.ok) throw await buildHttpError(response);
 
       const json: GetOneResponse = await response.json();
-      return json.data || [];
+      return json.data ?? {};
     },
   },
 };
 
-const { dataProvider } = createDataProvider(BACKEND_BASE_URL, options);
+const { dataProvider } = createDataProvider(BACKEND_BASE_URL, options, {
+  timeout: false,
+});
 
 export { dataProvider };
