@@ -4,12 +4,11 @@ import { cn } from "@/lib/utils";
 import { useGetIdentity } from "@refinedev/core";
 
 type User = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  fullName: string;
+  id: string;
+  name: string;
   email: string;
-  avatar?: string;
+  role: string;
+  image?: string;
 };
 
 export function UserInfo() {
@@ -21,13 +20,13 @@ export function UserInfo() {
         <Skeleton className={cn("h-10", "w-10", "rounded-full")} />
         <div className={cn("flex", "flex-col", "justify-between", "h-10")}>
           <Skeleton className={cn("h-4", "w-32")} />
-          <Skeleton className={cn("h-4", "w-24")} />
+          <Skeleton className={cn("h-4", "w-28")} />
         </div>
       </div>
     );
   }
 
-  const { firstName, lastName, email } = user;
+  const { name, email, role } = user;
 
   return (
     <div className={cn("flex", "items-center", "gap-x-2")}>
@@ -41,10 +40,13 @@ export function UserInfo() {
           "text-left"
         )}
       >
-        <span className={cn("text-sm", "font-medium", "text-muted-foreground")}>
-          {firstName} {lastName}
+        <span className={cn("text-sm", "font-medium", "text-foreground")}>
+          {name}
         </span>
         <span className={cn("text-xs", "text-muted-foreground")}>{email}</span>
+        <span className={cn("text-xs", "capitalize", "text-muted-foreground")}>
+          {role}
+        </span>
       </div>
     </div>
   );

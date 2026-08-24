@@ -1,4 +1,5 @@
 import { UserAvatar } from "@/components/refine-ui/layout/user-avatar";
+import { UserInfo } from "@/components/refine-ui/layout/user-info";
 import { ThemeToggle } from "@/components/refine-ui/theme/theme-toggle";
 import {
   DropdownMenu,
@@ -132,6 +133,9 @@ const UserDropdown = () => {
         <UserAvatar />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
+        <div className={cn("border-b", "px-2", "py-2", "pb-4", "mb-1")}>
+          <UserInfo />
+        </div>
         <DropdownMenuItem
           onClick={() => {
             logout();
