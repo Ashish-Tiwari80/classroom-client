@@ -109,6 +109,11 @@ const options: CreateDataProviderOptions = {
 
 const { dataProvider } = createDataProvider(BACKEND_BASE_URL, options, {
   timeout: false,
+  fetch: (url, init) =>
+    fetch(url, {
+      ...init,
+      credentials: "include",
+    }),
 });
 
 export { dataProvider };
