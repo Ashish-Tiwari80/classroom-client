@@ -14,6 +14,7 @@ import {
 import { Select } from "@/components/ui/select";
 import { ROLE_OPTIONS } from "@/constants";
 import { User } from "@/types";
+import { useGetIdentity } from "@refinedev/core";
 import { useTable } from "@refinedev/react-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Search } from "lucide-react";
@@ -22,19 +23,22 @@ import { useSearchParams } from "react-router";
 
 const UsersList = () => {
   const [searchParams] = useSearchParams();
+  const { data: currentUser } = useGetIdentity<User>();
   const [searchQuery, setSearchQuery] = useState(
     searchParams.get("search") || "",
   );
   const [selectedRole, setSelectedRole] = useState("all");
+  const isAdmin = currentUser?.role === "admin";
+  const effectiveRole = isAdmin ? selectedRole : "teacher";
 
   const roleFilters =
-    selectedRole === "all"
+    effectiveRole === "all"
       ? []
       : [
           {
             field: "role",
             operator: "eq" as const,
-            value: selectedRole,
+            value: effectiveRole,
           },
         ];
   const searchFilters = searchQuery
@@ -146,7 +150,11 @@ const UsersList = () => {
           </div>
 
           <div className="flex gap-2 w-full sm:w-auto">
-            <Select value={selectedRole} onValueChange={setSelectedRole}>
+            <Select
+              value={isAdmin ? selectedRole : "teacher"}
+              onValueChange={setSelectedRole}
+              disabled={!isAdmin}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Filter by role..." />
               </SelectTrigger>
