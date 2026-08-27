@@ -58,7 +58,12 @@ const EnrollmentsList = () => {
   const fetchEnrollments = useCallback(async () => {
     if (!studentId) return;
     try {
-      const res = await fetch(`${apiUrl}enrollments/student/${studentId}`);
+      const res = await fetch(`${apiUrl}enrollments/student/${studentId}`, {
+        credentials: "include",
+      });
+      if (!res.ok) {
+        throw new Error(`Failed to fetch enrollments: ${res.status}`);
+      }
       const json = await res.json();
       const ids = new Set<number>(
         (json.data as Enrollment[]).map((e) => e.classId),
