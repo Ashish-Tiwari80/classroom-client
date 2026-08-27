@@ -129,7 +129,9 @@ const QuizzesShow = () => {
     setQuizLoading(true);
     setQuizError(false);
  
-    fetch(`${BACKEND_BASE_URL}quizzes/${id}?userId=${encodeURIComponent(userId)}`)
+    fetch(`${BACKEND_BASE_URL}quizzes/${id}?userId=${encodeURIComponent(userId)}`, {
+      credentials: "include",
+    })
       .then(async (res) => {
         if (!res.ok) throw new Error("Failed to load");
         const json = await res.json();
@@ -177,6 +179,7 @@ const QuizzesShow = () => {
       const res = await fetch(`${BACKEND_BASE_URL}quizzes/${quiz.id}/analyze`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           answers,
           score: calculatedScore,
